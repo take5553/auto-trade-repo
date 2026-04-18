@@ -1,12 +1,12 @@
 function App() {
-  var [now, setNow] = useState(new Date());
+  const [now, setNow] = useState(new Date());
 
   useEffect(() => {
-    var id = setInterval(() => setNow(new Date()), 1000);
+    const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  var portfolioVal = LAST_EQUITY.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  const portfolioVal = LAST_EQUITY.toLocaleString('en-US', { maximumFractionDigits: 0 });
 
   return (
     <div className="app">

@@ -1,19 +1,19 @@
-var { useRef, useEffect, useState } = React;
+const { useRef, useEffect, useState } = React;
 
 /* ── Icons ── */
-var IconTrend = () => (
+const IconTrend = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" />
   </svg>
 );
 
-var IconWallet = () => (
+const IconWallet = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <rect x="2" y="5" width="20" height="14" rx="2" /><path d="M16 12h2" />
   </svg>
 );
 
-var IconTarget = () => (
+const IconTarget = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="4" />
     <line x1="12" y1="2" x2="12" y2="6" /><line x1="12" y1="18" x2="12" y2="22" />
@@ -21,14 +21,14 @@ var IconTarget = () => (
   </svg>
 );
 
-var IconActivity = () => (
+const IconActivity = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
   </svg>
 );
 
 /* ── KPI Card ── */
-var KpiCard = ({ title, value, sub, badge, badgeUp, iconEl, iconClass }) => (
+const KpiCard = ({ title, value, sub, badge, badgeUp, iconEl, iconClass }) => (
   <div className="card kpi-card">
     <div className="kpi-header">
       <span className="kpi-title">{title}</span>
@@ -43,13 +43,13 @@ var KpiCard = ({ title, value, sub, badge, badgeUp, iconEl, iconClass }) => (
 );
 
 /* ── Equity sparkline ── */
-var EquityChart = () => {
-  var ref = useRef(null);
+const EquityChart = () => {
+  const ref = useRef(null);
 
   useEffect(() => {
     if (!ref.current) return;
 
-    var chart = LightweightCharts.createChart(ref.current, {
+    const chart = LightweightCharts.createChart(ref.current, {
       layout: { background: { color: 'transparent' }, textColor: '#8b949e' },
       grid: { vertLines: { color: '#21262d' }, horzLines: { color: '#21262d' } },
       rightPriceScale: { borderColor: '#30363d' },
@@ -59,7 +59,7 @@ var EquityChart = () => {
       height: ref.current.offsetHeight,
     });
 
-    var series = chart.addSeries(LightweightCharts.AreaSeries, {
+    const series = chart.addSeries(LightweightCharts.AreaSeries, {
       lineColor: '#58a6ff',
       topColor: '#58a6ff33',
       bottomColor: '#58a6ff05',
@@ -68,7 +68,7 @@ var EquityChart = () => {
     series.setData(EQUITY);
     chart.timeScale().fitContent();
 
-    var ro = new ResizeObserver(() => {
+    const ro = new ResizeObserver(() => {
       if (ref.current) {
         chart.applyOptions({ width: ref.current.offsetWidth, height: ref.current.offsetHeight });
       }
@@ -82,7 +82,7 @@ var EquityChart = () => {
 };
 
 /* ── Market Overview ── */
-var MarketOverview = () => (
+const MarketOverview = () => (
   <div className="card market-card">
     <div className="section-label" style={{ marginBottom: 0 }}>マーケット概況</div>
     {MARKETS.map(m => (
@@ -98,7 +98,7 @@ var MarketOverview = () => (
 );
 
 /* ── Positions Table ── */
-var PositionsTable = () => (
+const PositionsTable = () => (
   <div className="card">
     <div className="section-label">オープンポジション</div>
     <div className="table-wrap">
@@ -134,7 +134,7 @@ var PositionsTable = () => (
 );
 
 /* ── Activity Feed ── */
-var ActivityFeed = () => (
+const ActivityFeed = () => (
   <div className="card">
     <div className="section-label">取引履歴</div>
     <div className="feed">
@@ -152,7 +152,7 @@ var ActivityFeed = () => (
 );
 
 /* ── Alerts List ── */
-var AlertsList = () => (
+const AlertsList = () => (
   <div className="card">
     <div className="section-label">アラート</div>
     {ALERTS.map((a, i) => (
