@@ -3,6 +3,7 @@ const SummaryBar = ({ summary }) => {
 
   return (
     <div className="summary-bar">
+      <span style={{ position: 'absolute', bottom: 6, left: 12 }}><DevLabel path="components/SummaryBar.jsx" /></span>
       <div className="summary-item">
         <span className="summary-label">本日の含み損益</span>
         <span className={`summary-value ${pnlUp ? 'up' : 'down'}`}>{summary.totalPnl}</span>

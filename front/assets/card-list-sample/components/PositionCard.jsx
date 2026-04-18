@@ -23,7 +23,10 @@ const PositionCard = ({ pos }) => {
           <span className="pos-price-label">現在値</span>
           <span className={`pos-price-value ${pnlUp ? 'up' : 'down'}`}>{pos.mark}</span>
         </div>
-        <div className="pos-size">数量 {pos.size}</div>
+        <div className="pos-price-row pos-size">
+          <span className="pos-price-label">数量</span>
+          <span>{pos.size}</span>
+        </div>
       </div>
 
       {/* Sparkline */}

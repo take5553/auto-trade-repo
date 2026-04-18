@@ -91,11 +91,12 @@ body {
   background: #161b22;
   border: 1px solid #30363d;
   border-radius: 12px;
-  padding: 16px 24px;
+  padding: 16px 24px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  position: relative;
 }
 
 .summary-item {
@@ -143,7 +144,7 @@ body {
   border-radius: 12px;
   padding: 16px 20px;
   display: grid;
-  grid-template-columns: 180px 1fr 140px 120px 110px;
+  grid-template-columns: 160px 200px 1fr 130px 90px;
   align-items: center;
   gap: 16px;
   transition: border-color 0.2s, background 0.2s;
@@ -202,6 +203,7 @@ body {
 .pos-price-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   font-size: 12px;
   color: #8b949e;
@@ -211,7 +213,7 @@ body {
   font-size: 10px;
   color: #6e7681;
   font-weight: 500;
-  width: 36px;
+  white-space: nowrap;
   flex-shrink: 0;
 }
 
@@ -236,6 +238,7 @@ body {
 /* Sparkline */
 .pos-spark {
   height: 44px;
+  width: 100%;
 }
 
 /* PnL */

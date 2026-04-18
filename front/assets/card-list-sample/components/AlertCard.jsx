@@ -6,5 +6,6 @@ const AlertCard = ({ alert }) => (
       <div className="alert-desc">{alert.desc}</div>
     </div>
     <span className="alert-time">{alert.time}</span>
+    <DevLabel path="components/AlertCard.jsx" />
   </div>
 );
