@@ -2,7 +2,7 @@ const ActivityFeed = () => (
   <div className="card">
     <div className="section-label" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       取引履歴
-      <span style={{ fontSize: 10, color: '#58a6ff', fontFamily: 'monospace', opacity: 0.7, textTransform: 'none', letterSpacing: 'normal', fontWeight: 'normal' }}>components/ActivityFeed.jsx</span>
+      <DevLabel path="components/ActivityFeed.jsx" />
     </div>
     <div className="feed">
       {FEED.map((f, i) => (

@@ -71,7 +71,7 @@ function App() {
           <div className="card">
             <div className="chart-card-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               エクイティカーブ
-              <span style={{ fontSize: 10, color: '#58a6ff', fontFamily: 'monospace', opacity: 0.7 }}>components/EquityChart.jsx</span>
+              <DevLabel path="components/EquityChart.jsx" />
             </div>
             <div className="chart-card-sub">ポートフォリオ残高の推移（90日間）</div>
             <div className="sparkline-wrap">

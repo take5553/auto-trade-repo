@@ -2,7 +2,7 @@ const PositionsTable = () => (
   <div className="card">
     <div className="section-label" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       オープンポジション
-      <span style={{ fontSize: 10, color: '#58a6ff', fontFamily: 'monospace', opacity: 0.7, textTransform: 'none', letterSpacing: 'normal', fontWeight: 'normal' }}>components/PositionsTable.jsx</span>
+      <DevLabel path="components/PositionsTable.jsx" />
     </div>
     <div className="table-wrap">
       <table>
