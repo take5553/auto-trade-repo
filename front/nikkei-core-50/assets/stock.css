@@ -75,13 +75,13 @@ body { overflow: hidden; }
 }
 
 .vol-section {
-  height: 72px;
+  height: 100px;
   flex-shrink: 0;
   border-top: 1px solid #21262d;
 }
 
 .rsi-section {
-  height: 108px;
+  height: 140px;
   flex-shrink: 0;
   border-top: 1px solid #21262d;
 }
@@ -96,8 +96,8 @@ body { overflow: hidden; }
   padding: 3px 12px 0;
 }
 
-.vol-chart-area  { width: 100%; height: 53px; }
-.rsi-chart-area  { width: 100%; height: 86px; }
+.vol-chart-area  { width: 100%; height: 81px; }
+.rsi-chart-area  { width: 100%; height: 118px; }
 
 /* ── Signal Column ── */
 .signal-column {
@@ -300,7 +300,7 @@ body { overflow: hidden; }
   }
 
   .chart-column {
-    height: 560px;
+    height: 640px;
     border-right: none;
     border-bottom: 1px solid #30363d;
   }
