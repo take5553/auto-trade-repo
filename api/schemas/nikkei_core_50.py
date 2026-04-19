@@ -1,9 +1,25 @@
+from enum import Enum
 from typing import Literal
 
 from pydantic import BaseModel
 
 
 PredictionSignal = Literal["buy", "sell", "neutral"]
+
+
+class PredictionScope(str, Enum):
+    INDIVIDUAL = "individual"
+    CROSS_SECTIONAL = "cross_sectional"
+    SECTOR = "sector"
+    MARKET = "market"
+
+
+class DetailedPrediction(BaseModel):
+    name: str
+    scope: PredictionScope
+    signal: PredictionSignal
+    confidence: float
+    reasons: list[str]
 
 
 class StockQuote(BaseModel):
@@ -44,9 +60,7 @@ class StockPrediction(BaseModel):
     symbol: str
     name: str
     sector: str
-    signal: PredictionSignal
-    confidence: float
-    reasons: list[str]
+    details: list[DetailedPrediction]
 
 
 class IndicatorRecord(BaseModel):
