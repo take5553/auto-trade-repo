@@ -6,8 +6,12 @@
 
 ```
 auto-trade-repo/
-├── api/              # Python (FastAPI) バックエンド
-├── front/            # 静的フロントエンド (HTML + React CDN)
+├── api/                      # Python (FastAPI) バックエンド
+│   ├── main.py               # FastAPI エントリポイント（include_router を列挙）
+│   ├── routers/              # HTTP 層（APIRouter ごとに 1 ファイル）
+│   ├── services/             # ビジネスロジック層（ABC + 実装）
+│   └── schemas/              # Pydantic モデル（APIコントラクト）
+├── front/                    # 静的フロントエンド (HTML + React CDN)
 │   ├── index.html
 │   ├── card-sample/          # カードダッシュボード（横長カード縦並び）
 │   └── card-list-sample/     # カードリストダッシュボード（情報密度改善版）
@@ -28,9 +32,31 @@ docker compose up -d
 
 ## 技術スタック
 
-- Python 3.14 / FastAPI / Uvicorn
+- Python 3.14 / FastAPI / Uvicorn / Pydantic
 - React 18 (CDN) / Babel Standalone
 - Docker Compose / Nginx
+
+## 開発方針
+
+- **バックエンド先行**：新しいページは `schemas/` でAPIコントラクトを先に確定してから `services/` と `routers/` を実装し、その後フロントに着手する。
+- **API仕様の正本は `/docs`**：FastAPI 自動生成の OpenAPI を参照する。
+
+## バックエンドのコード構成ルール
+
+新しいページ（機能）を追加するときは、下記の 3 ファイルをセットで追加する。
+
+| ファイル | 役割 |
+|---------|------|
+| `api/schemas/<page>.py` | Pydantic モデル（リクエスト／レスポンスの型）。1ページに複数モデルがあってもこの1ファイルに集約。 |
+| `api/services/<page>.py` | ビジネスロジックの ABC。戻り値の型は `schemas/` を参照。 |
+| `api/services/<page>_mock.py` | モック実装。`_mock` サフィックスで固定。 |
+| `api/routers/<page>.py` | `APIRouter(prefix="/api/<page-kebab>")`。薄く保ち、service を呼ぶだけ。各エンドポイントに `response_model=...` を付ける。 |
+
+命名規則：
+- URL は kebab-case（例：`/api/nikkei-core-50`）
+- Python モジュール／ファイル名は snake_case（例：`nikkei_core_50`）
+
+追加後は `api/main.py` の `include_router` に登録する。
 
 ## 作業ルール
 

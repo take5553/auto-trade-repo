@@ -9,8 +9,12 @@ FastAPI バックエンド + Nginx + React フロントエンドで構成。
 
 ```
 auto-trade-repo/
-├── api/              # Python (FastAPI) バックエンド
-├── front/            # フロントエンド (HTML + React)
+├── api/                      # Python (FastAPI) バックエンド
+│   ├── main.py               # FastAPI エントリポイント
+│   ├── routers/              # HTTP 層（APIRouter ごとに 1 ファイル）
+│   ├── services/             # ビジネスロジック層（ABC + 実装）
+│   └── schemas/              # Pydantic モデル（APIコントラクト）
+├── front/                    # フロントエンド (HTML + React)
 │   ├── index.html            # トップページ
 │   ├── card-sample/          # カードダッシュボード（横長カード縦並び）
 │   └── card-list-sample/     # カードリストダッシュボード（情報密度改善版）
@@ -37,6 +41,7 @@ docker compose up -d
 | `http://localhost/card-list-sample/` | カードリストダッシュボード（サンプル） |
 | `http://localhost/api/*` | FastAPI バックエンド |
 | `http://localhost:8080/api/*` | FastAPI 直接アクセス（開発用） |
+| `http://localhost:8080/docs` | OpenAPI ドキュメント（API 仕様の正本） |
 
 ### ルーティング
 
@@ -49,9 +54,19 @@ docker compose up -d
 |--------|------|------|
 | GET | `/api/hello` | `Hello from Python!` を返す |
 | GET | `/api/good_night` | `Good night from Python!` を返す |
+| GET | `/api/card-list/positions` | カードリスト用：保有ポジション一覧 |
+| GET | `/api/card-list/alerts` | カードリスト用：アラート一覧 |
+| GET | `/api/card-list/summary` | カードリスト用：ダッシュボードのサマリ |
+
+詳細なレスポンススキーマは `http://localhost:8080/docs` を参照。
+
+## 開発方針
+
+- **バックエンド先行**：新しいページは `api/schemas/` でAPIコントラクトを確定させてから `services/` と `routers/` を実装し、フロントはそれに合わせて作る。
+- 新ページ追加時のバックエンド側のフォルダ構成ルールは [`AGENTS.md`](./AGENTS.md) を参照。
 
 ## 技術スタック
 
-- **バックエンド**: Python 3.14 / FastAPI / Uvicorn
+- **バックエンド**: Python 3.14 / FastAPI / Uvicorn / Pydantic
 - **フロントエンド**: React 18 (CDN) / Babel Standalone / CSS
 - **インフラ**: Docker Compose / Nginx
