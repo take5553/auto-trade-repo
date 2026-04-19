@@ -24,7 +24,7 @@ def gen_sparkline(base_price: float, points: int, volatility: float) -> list[flo
     return data
 
 
-@app.get("/api/positions")
+@app.get("/api/card-list/positions")
 def get_positions():
     return [
         {
@@ -114,7 +114,7 @@ def get_positions():
     ]
 
 
-@app.get("/api/alerts")
+@app.get("/api/card-list/alerts")
 def get_alerts():
     return [
         {"level": "danger", "icon": "⚠", "title": "BTC ドローダウン警告",    "desc": "最大ドローダウン 5% に近づいています",       "time": "14:35"},
@@ -124,7 +124,7 @@ def get_alerts():
     ]
 
 
-@app.get("/api/summary")
+@app.get("/api/card-list/summary")
 def get_summary():
     return {
         "totalPnl": "+$832.29",

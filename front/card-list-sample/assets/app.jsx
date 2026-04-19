@@ -13,9 +13,9 @@ function App() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/positions').then(r => r.json()),
-      fetch('/api/alerts').then(r => r.json()),
-      fetch('/api/summary').then(r => r.json()),
+      fetch('/api/card-list/positions').then(r => r.json()),
+      fetch('/api/card-list/alerts').then(r => r.json()),
+      fetch('/api/card-list/summary').then(r => r.json()),
     ])
       .then(([pos, al, sum]) => {
         setPositions(pos);
