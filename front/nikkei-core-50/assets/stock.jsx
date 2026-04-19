@@ -10,10 +10,11 @@ const SIGNAL_BG     = { buy: '#1a7f3722', sell: '#f8514922', neutral: '#21262d' 
 const SIGNAL_BORDER = { buy: '#2ea04333', sell: '#f8514933', neutral: '#30363d' };
 
 /* ── Chart ── */
-function StockChart({ history, indicators }) {
+function StockChart({ history, indicators, days, setDays }) {
   const mainRef = useRef(null);
   const volRef  = useRef(null);
   const rsiRef  = useRef(null);
+  const chartRef = useRef(null);
 
   useEffect(() => {
     if (!history || !indicators) return;
@@ -36,6 +37,7 @@ function StockChart({ history, indicators }) {
       width: mainEl.offsetWidth,
       height: mainEl.offsetHeight,
     });
+    chartRef.current = chart;
 
     chart.addSeries(LightweightCharts.CandlestickSeries, {
       upColor: '#3fb950', downColor: '#f85149',
@@ -119,15 +121,65 @@ function StockChart({ history, indicators }) {
     ro.observe(volEl);
     ro.observe(rsiEl);
 
-    return () => { chart.remove(); volChart.remove(); rsiChart.remove(); ro.disconnect(); };
+    const applyZoom = () => {
+      if (!history || history.records.length === 0) return;
+      const records = history.records;
+      const lastDate = new Date(records[records.length - 1].date);
+      const targetTime = lastDate.getTime() - (days * 24 * 60 * 60 * 1000);
+      const visibleRecords = records.filter(r => new Date(r.date).getTime() >= targetTime);
+      if (visibleRecords.length > 0) {
+        chart.timeScale().setVisibleRange({
+          from: visibleRecords[0].date,
+          to: records[records.length - 1].date,
+        });
+      }
+    };
+    setTimeout(applyZoom, 0);
+
+    return () => { chart.remove(); volChart.remove(); rsiChart.remove(); ro.disconnect(); chartRef.current = null; };
   }, [history, indicators]);
+
+  useEffect(() => {
+    if (!chartRef.current || !history || history.records.length === 0) return;
+    const records = history.records;
+    const lastDate = new Date(records[records.length - 1].date);
+    const targetTime = lastDate.getTime() - (days * 24 * 60 * 60 * 1000);
+    const visibleRecords = records.filter(r => new Date(r.date).getTime() >= targetTime);
+    if (visibleRecords.length > 0) {
+      chartRef.current.timeScale().setVisibleRange({
+        from: visibleRecords[0].date,
+        to: records[records.length - 1].date,
+      });
+    } else {
+      chartRef.current.timeScale().fitContent();
+    }
+  }, [days, history]);
 
   return (
     <div className="chart-column">
       <div className="chart-toolbar">
-        <span><span style={{ color: '#58a6ff' }}>━</span>&nbsp;MA5</span>
-        <span><span style={{ color: '#d2a8ff' }}>━</span>&nbsp;MA25</span>
-        <span><span style={{ color: '#f0b429' }}>━</span>&nbsp;RSI(14)</span>
+        <div style={{ display: 'flex', gap: '14px' }}>
+          <span><span style={{ color: '#58a6ff' }}>━</span>&nbsp;MA5</span>
+          <span><span style={{ color: '#d2a8ff' }}>━</span>&nbsp;MA25</span>
+          <span><span style={{ color: '#f0b429' }}>━</span>&nbsp;RSI(14)</span>
+        </div>
+        <div className="chart-period-selector" style={{ marginLeft: 'auto', display: 'flex', gap: '4px' }}>
+          {[
+            { label: '1ヶ月', days: 30 },
+            { label: '3ヶ月', days: 90 },
+            { label: '1年', days: 365 },
+            { label: '3年', days: 1095 },
+            { label: '5年', days: 1825 }
+          ].map(p => (
+            <button
+              key={p.days}
+              className={`period-btn ${days === p.days ? 'active' : ''}`}
+              onClick={() => setDays(p.days)}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
       </div>
       <div ref={mainRef} className="main-chart-area" />
       <div className="vol-section">
@@ -280,6 +332,7 @@ function App() {
   const [prediction, setPrediction] = useState(null);
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState(null);
+  const [days,       setDays]       = useState(365);
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -289,10 +342,11 @@ function App() {
 
   useEffect(() => {
     if (!symbol) { setError('銘柄コードが指定されていません'); setLoading(false); return; }
+    setLoading(true);
     const base = `/api/nikkei-core-50/stocks/${encodeURIComponent(symbol)}`;
     Promise.all([
-      fetch(`${base}/history?days=365`).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
-      fetch(`${base}/indicators?days=365`).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
+      fetch(`${base}/history?days=1825`).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
+      fetch(`${base}/indicators?days=1825`).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
       fetch(`${base}/prediction`).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
     ])
       .then(([h, ind, pred]) => { setHistory(h); setIndicators(ind); setPrediction(pred); setLoading(false); })
@@ -355,7 +409,7 @@ function App() {
       </div>
 
       <div className="stock-main">
-        <StockChart history={history} indicators={indicators} />
+        <StockChart history={history} indicators={indicators} days={days} setDays={setDays} />
         <SignalPanel prediction={prediction} indicators={indicators} lastClose={price} />
       </div>
     </div>

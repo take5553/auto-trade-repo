@@ -69,6 +69,29 @@ body { overflow: hidden; }
   color: #8b949e;
 }
 
+/* ── Chart Period Selector ── */
+.chart-period-selector .period-btn {
+  background: transparent;
+  border: 1px solid #30363d;
+  color: #8b949e;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.chart-period-selector .period-btn:hover {
+  border-color: #484f58;
+  color: #e6edf3;
+}
+
+.chart-period-selector .period-btn.active {
+  background: #21262d;
+  color: #e6edf3;
+  border-color: #8b949e;
+}
+
 .main-chart-area {
   flex: 1;
   min-height: 0;
