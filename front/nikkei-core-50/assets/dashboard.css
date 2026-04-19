@@ -315,7 +315,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  cursor: default;
+  cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
   position: relative;
   overflow: hidden;
@@ -429,7 +429,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 7px;
-  cursor: default;
+  cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
   position: relative;
   overflow: hidden;

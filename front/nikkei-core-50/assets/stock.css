@@ -1,0 +1,309 @@
+/* ── Stock Detail Page Layout ── */
+
+body { overflow: hidden; }
+
+.stock-app {
+  display: grid;
+  grid-template-rows: 48px 56px 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Stock Info Bar ── */
+.stock-info-bar {
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+  overflow: hidden;
+}
+
+.info-divider {
+  width: 1px;
+  height: 28px;
+  background: #30363d;
+  flex-shrink: 0;
+}
+
+.info-price {
+  font-size: 22px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.info-change {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* ── Main 2-column Layout ── */
+.stock-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 296px;
+  overflow: hidden;
+}
+
+/* ── Chart Column ── */
+.chart-column {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid #30363d;
+}
+
+.chart-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 5px 14px;
+  border-bottom: 1px solid #30363d;
+  background: #161b22;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #8b949e;
+}
+
+.main-chart-area {
+  flex: 1;
+  min-height: 0;
+}
+
+.vol-section {
+  height: 72px;
+  flex-shrink: 0;
+  border-top: 1px solid #21262d;
+}
+
+.rsi-section {
+  height: 108px;
+  flex-shrink: 0;
+  border-top: 1px solid #21262d;
+}
+
+.section-label {
+  display: block;
+  font-size: 9px;
+  font-weight: 600;
+  color: #6e7681;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 12px 0;
+}
+
+.vol-chart-area  { width: 100%; height: 53px; }
+.rsi-chart-area  { width: 100%; height: 86px; }
+
+/* ── Signal Column ── */
+.signal-column {
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #0d1117;
+}
+
+.signal-section {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.signal-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6e7681;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+/* ── Signal Badge (large) ── */
+.signal-badge-lg {
+  display: block;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+/* ── RSI Gauge ── */
+.rsi-gauge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.rsi-value-lg {
+  font-size: 26px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  min-width: 60px;
+  line-height: 1;
+}
+
+.rsi-track { flex: 1; }
+
+.rsi-bar-bg {
+  height: 8px;
+  background: #21262d;
+  border-radius: 4px;
+  position: relative;
+}
+
+.rsi-bar-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #3fb950, #f0b429 50%, #f85149);
+  border-radius: 4px;
+}
+
+.rsi-bar-marker {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 16px;
+  background: #e6edf3;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 4px #0d1117;
+}
+
+.rsi-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #6e7681;
+  margin-top: 3px;
+}
+
+.rsi-status {
+  font-size: 11px;
+  color: #8b949e;
+  margin-top: 4px;
+}
+
+/* ── MA Table ── */
+.ma-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.ma-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #21262d;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ma-row:last-child { border-bottom: none; }
+
+.ma-label {
+  color: #8b949e;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ma-value { font-weight: 700; }
+
+.ma-dot {
+  display: inline-block;
+  width: 10px;
+  height: 2px;
+  border-radius: 1px;
+  vertical-align: middle;
+}
+
+/* ── 52-Week Range ── */
+.range-bar-bg {
+  height: 8px;
+  background: #21262d;
+  border-radius: 4px;
+  position: relative;
+  margin: 8px 0 4px;
+}
+
+.range-bar-marker {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 16px;
+  background: #e6edf3;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 4px #0d1117;
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.range-deviation {
+  font-size: 11px;
+  color: #8b949e;
+  margin-top: 8px;
+  display: flex;
+  gap: 12px;
+  font-variant-numeric: tabular-nums;
+  flex-wrap: wrap;
+}
+
+/* ── Back Button ── */
+.back-btn {
+  background: transparent;
+  border: 1px solid #30363d;
+  color: #8b949e;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.back-btn:hover {
+  color: #e6edf3;
+  border-color: #484f58;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  body { overflow: auto; }
+
+  .stock-app {
+    grid-template-rows: 48px 56px auto;
+    height: auto;
+    overflow: visible;
+  }
+
+  .stock-main {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .chart-column {
+    height: 560px;
+    border-right: none;
+    border-bottom: 1px solid #30363d;
+  }
+
+  .signal-column { overflow: visible; }
+}

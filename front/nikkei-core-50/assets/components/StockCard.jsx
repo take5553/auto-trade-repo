@@ -2,6 +2,7 @@ const StockCard = ({ stock }) => {
   const up = stock.change_pct != null && stock.change_pct >= 0;
   const changeClass = stock.change_pct == null ? 'neutral' : up ? 'up' : 'down';
   const tileClass   = stock.change_pct == null ? '' : up ? 'up-tile' : 'down-tile';
+  const handleClick = () => { window.location.href = `/nikkei-core-50/stock.html?symbol=${encodeURIComponent(stock.symbol)}`; };
 
   const fmtPrice  = (v) => v == null ? '—' : v.toLocaleString('ja-JP', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
   const fmtChange = (v) => v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1);
@@ -13,7 +14,7 @@ const StockCard = ({ stock }) => {
   };
 
   return (
-    <div className={`stock-tile ${tileClass}`}>
+    <div className={`stock-tile ${tileClass}`} onClick={handleClick}>
       <div className="tile-header">
         <span className="tile-symbol">{stock.symbol}</span>
         <span className="tile-sector">{stock.sector}</span>

@@ -2,9 +2,10 @@ const SIGNAL_LABEL = { buy: 'BUY', sell: 'SELL', neutral: 'NEUTRAL' };
 
 const PredictionCard = ({ pred }) => {
   const pct = Math.round(pred.confidence * 100);
+  const handleClick = () => { window.location.href = `/nikkei-core-50/stock.html?symbol=${encodeURIComponent(pred.symbol)}`; };
 
   return (
-    <div className={`pred-tile ${pred.signal}`}>
+    <div className={`pred-tile ${pred.signal}`} onClick={handleClick}>
       <div className="pred-tile-header">
         <div style={{ minWidth: 0 }}>
           <div className="tile-symbol">{pred.symbol}</div>
