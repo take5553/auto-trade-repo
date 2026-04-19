@@ -25,7 +25,7 @@ const PositionCard = ({ pos }) => {
         </div>
         <div className="pos-price-row pos-size">
           <span className="pos-price-label">数量</span>
-          <span>{pos.size}</span>
+          <span className="pos-price-value pos-size-value">{pos.size}</span>
         </div>
       </div>
 
