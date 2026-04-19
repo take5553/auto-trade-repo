@@ -47,3 +47,18 @@ class StockPrediction(BaseModel):
     signal: PredictionSignal
     confidence: float
     reasons: list[str]
+
+
+class IndicatorRecord(BaseModel):
+    date: str
+    value: float | None
+
+
+class StockIndicators(BaseModel):
+    symbol: str
+    name: str
+    ma5: list[IndicatorRecord]
+    ma25: list[IndicatorRecord]
+    rsi14: list[IndicatorRecord]
+    high_52w: float | None
+    low_52w: float | None

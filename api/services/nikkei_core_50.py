@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from schemas.nikkei_core_50 import MarketSummary, StockHistory, StockPrediction, StockQuote
+from schemas.nikkei_core_50 import MarketSummary, StockHistory, StockIndicators, StockPrediction, StockQuote
 
 
 class NikkeiCore50Service(ABC):
@@ -19,3 +19,6 @@ class NikkeiCore50Service(ABC):
 
     @abstractmethod
     def get_prediction(self, symbol: str) -> StockPrediction: ...
+
+    @abstractmethod
+    def get_indicators(self, symbol: str, days: int = 365) -> StockIndicators: ...

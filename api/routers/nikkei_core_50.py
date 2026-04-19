@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from schemas.nikkei_core_50 import MarketSummary, StockHistory, StockPrediction, StockQuote
+from schemas.nikkei_core_50 import MarketSummary, StockHistory, StockIndicators, StockPrediction, StockQuote
 from services.nikkei_core_50 import NikkeiCore50Service
 from services.nikkei_core_50_store import ALL_SYMBOLS
 from services.nikkei_core_50_yfinance import NikkeiCore50YFinanceService
@@ -51,3 +51,14 @@ def get_prediction(
     if symbol not in ALL_SYMBOLS:
         raise HTTPException(status_code=404, detail=f"銘柄 {symbol} は対象外です")
     return service.get_prediction(symbol)
+
+
+@router.get("/stocks/{symbol}/indicators", response_model=StockIndicators)
+def get_indicators(
+    symbol: str,
+    days: int = Query(default=365, ge=1, le=1825),
+    service: NikkeiCore50Service = Depends(get_service),
+):
+    if symbol not in ALL_SYMBOLS:
+        raise HTTPException(status_code=404, detail=f"銘柄 {symbol} は対象外です")
+    return service.get_indicators(symbol, days)

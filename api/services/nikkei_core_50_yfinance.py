@@ -3,10 +3,12 @@ from datetime import date, timedelta
 import pandas as pd
 
 from schemas.nikkei_core_50 import (
+    IndicatorRecord,
     MarketSummary,
     OHLCVRecord,
     PredictionSignal,
     StockHistory,
+    StockIndicators,
     StockPrediction,
     StockQuote,
 )
@@ -81,6 +83,50 @@ class NikkeiCore50YFinanceService(NikkeiCore50Service):
         self._store.ensure_all()
         df = self._store.get_ohlcv(symbol)
         return self._build_prediction(symbol, df)
+
+    def get_indicators(self, symbol: str, days: int = 365) -> StockIndicators:
+        self._store.ensure_all()
+        df = self._store.get_ohlcv(symbol)
+        close = df["Close"].dropna()
+
+        # 52週高値安値は直近252営業日で計算（表示期間に関わらず固定）
+        high_52w = round(float(close.tail(252).max()), 2) if len(close) >= 252 else None
+        low_52w = round(float(close.tail(252).min()), 2) if len(close) >= 252 else None
+
+        # MA5/MA25/RSI14 は表示期間より長い範囲で計算してからカット
+        buffer = max(days + 30, 300)
+        close_buf = close.tail(buffer)
+
+        ma5_series = close_buf.rolling(5).mean()
+        ma25_series = close_buf.rolling(25).mean()
+
+        delta = close_buf.diff()
+        gain = delta.clip(lower=0).ewm(com=13, adjust=False).mean()
+        loss = (-delta.clip(upper=0)).ewm(com=13, adjust=False).mean()
+        rsi_series = (100 - (100 / (1 + gain / loss))).round(2)
+
+        cutoff = pd.Timestamp(date.today() - timedelta(days=days))
+        info = TICKER_INFO.get(symbol, {"name": symbol, "sector": ""})
+
+        def to_records(series: pd.Series) -> list[IndicatorRecord]:
+            sliced = series[series.index >= cutoff]
+            return [
+                IndicatorRecord(
+                    date=str(idx.date()),
+                    value=round(float(v), 2) if pd.notna(v) else None,
+                )
+                for idx, v in sliced.items()
+            ]
+
+        return StockIndicators(
+            symbol=symbol,
+            name=info["name"],
+            ma5=to_records(ma5_series),
+            ma25=to_records(ma25_series),
+            rsi14=to_records(rsi_series),
+            high_52w=high_52w,
+            low_52w=low_52w,
+        )
 
     # ------------------------------------------------------------------
     # private helpers
