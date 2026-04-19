@@ -1,18 +1,20 @@
 from schemas.nikkei_core_50 import StockPrediction, DetailedPrediction
 from services.nikkei_core_50_store import NikkeiDataStore, TICKER_INFO
+from services.sector_etf_store import SectorEtfStore
 from services.predictions.base import BasePredictor, PredictionContext
 from services.predictions.individual import TechnicalPredictor
 from services.predictions.cross_sectional import CrossSectionalStubPredictor
-from services.predictions.sector import SectorStubPredictor
+from services.predictions.sector_relative_strength import SectorRelativeStrengthPredictor
 from services.predictions.market import MarketStubPredictor
 
 class PredictionEngine:
     def __init__(self, store: NikkeiDataStore):
         self._store = store
+        etf_store = SectorEtfStore()
         self._predictors: list[BasePredictor] = [
             TechnicalPredictor(),
             CrossSectionalStubPredictor(),
-            SectorStubPredictor(),
+            SectorRelativeStrengthPredictor(etf_store),
             MarketStubPredictor(),
         ]
 
