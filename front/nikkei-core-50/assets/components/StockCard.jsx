@@ -1,31 +1,39 @@
 const StockCard = ({ stock }) => {
   const up = stock.change_pct != null && stock.change_pct >= 0;
   const changeClass = stock.change_pct == null ? 'neutral' : up ? 'up' : 'down';
+  const tileClass   = stock.change_pct == null ? '' : up ? 'up-tile' : 'down-tile';
 
-  const fmtPrice = (v) => v == null ? '—' : v.toLocaleString('ja-JP', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const fmtPrice  = (v) => v == null ? '—' : v.toLocaleString('ja-JP', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
   const fmtChange = (v) => v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1);
-  const fmtPct = (v) => v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
-  const fmtVolume = (v) => v == null ? '—' : (v >= 1_000_000 ? (v / 1_000_000).toFixed(1) + 'M' : (v / 1_000).toFixed(0) + 'K');
+  const fmtPct    = (v) => v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
+  const fmtVolume = (v) => {
+    if (v == null) return '—';
+    if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + 'M株';
+    return (v / 1_000).toFixed(0) + 'K株';
+  };
 
   return (
-    <div className="stock-card">
-      <div className="stock-left">
-        <span className="stock-symbol">{stock.symbol}</span>
-        <span className="stock-name">{stock.name}</span>
-        <span className="stock-sector">{stock.sector}</span>
-        <DevLabel path="components/StockCard.jsx" />
+    <div className={`stock-tile ${tileClass}`}>
+      <div className="tile-header">
+        <span className="tile-symbol">{stock.symbol}</span>
+        <span className="tile-sector">{stock.sector}</span>
       </div>
 
-      <span className={`stock-price ${changeClass}`}>{fmtPrice(stock.price)}</span>
+      <span className="tile-name">{stock.name}</span>
 
-      <div className="stock-change">
-        <span className={`stock-change-value ${changeClass}`}>{fmtChange(stock.change)}</span>
-        <span className={`stock-change-pct ${changeClass}`}>{fmtPct(stock.change_pct)}</span>
+      <div className="tile-price-row">
+        <span className={`tile-price ${changeClass}`}>{fmtPrice(stock.price)}</span>
+        <span className={`tile-pct ${changeClass}`}>{fmtPct(stock.change_pct)}</span>
       </div>
 
-      <span className="stock-volume">{fmtVolume(stock.volume)}</span>
+      <div className="tile-meta-row">
+        <span className={`tile-change ${changeClass}`}>{fmtChange(stock.change)}</span>
+        <span className="tile-volume">{fmtVolume(stock.volume)}</span>
+      </div>
 
       <Sparkline data={stock.spark} up={up} />
+
+      <DevLabel path="StockCard" />
     </div>
   );
 };

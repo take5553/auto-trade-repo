@@ -95,9 +95,9 @@ function App() {
             ))}
           </div>
 
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 12 }}>
             {tab === 'quotes' && (
-              <div className="card-list">
+              <div className="tile-grid">
                 {quotes.map(stock => (
                   <StockCard key={stock.symbol} stock={stock} />
                 ))}
@@ -105,7 +105,7 @@ function App() {
             )}
 
             {tab === 'predictions' && (
-              <div className="card-list">
+              <div className="pred-tile-grid">
                 {predictions
                   .slice()
                   .sort((a, b) => {

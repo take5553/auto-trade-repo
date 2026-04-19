@@ -4,23 +4,21 @@ const PredictionCard = ({ pred }) => {
   const pct = Math.round(pred.confidence * 100);
 
   return (
-    <div className={`pred-card ${pred.signal}`}>
-      <div className="stock-left">
-        <span className="stock-symbol">{pred.symbol}</span>
-        <span className="stock-name">{pred.name}</span>
-        <span className="stock-sector">{pred.sector}</span>
-        <DevLabel path="components/PredictionCard.jsx" />
+    <div className={`pred-tile ${pred.signal}`}>
+      <div className="pred-tile-header">
+        <div style={{ minWidth: 0 }}>
+          <div className="tile-symbol">{pred.symbol}</div>
+          <div className="tile-name" style={{ marginTop: 2 }}>{pred.name}</div>
+        </div>
+        <span className={`pred-signal ${pred.signal}`}>{SIGNAL_LABEL[pred.signal]}</span>
       </div>
 
-      <span className={`pred-signal ${pred.signal}`}>{SIGNAL_LABEL[pred.signal]}</span>
+      <span className="tile-sector" style={{ alignSelf: 'flex-start' }}>{pred.sector}</span>
 
-      <div className="pred-confidence">
-        <span className="pred-confidence-label">信頼度</span>
+      <div className="pred-confidence-row">
+        <span style={{ fontSize: 10, color: '#6e7681', flexShrink: 0 }}>信頼度</span>
         <div className="pred-confidence-bar-bg">
-          <div
-            className={`pred-confidence-bar ${pred.signal}`}
-            style={{ width: `${pct}%` }}
-          />
+          <div className={`pred-confidence-bar ${pred.signal}`} style={{ width: `${pct}%` }} />
         </div>
         <span className={`pred-confidence-value ${pred.signal}`}>{pct}%</span>
       </div>
@@ -30,6 +28,8 @@ const PredictionCard = ({ pred }) => {
           <span key={i} className="pred-reason-tag">{r}</span>
         ))}
       </div>
+
+      <DevLabel path="PredictionCard" />
     </div>
   );
 };
