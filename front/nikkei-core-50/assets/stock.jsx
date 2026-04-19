@@ -194,11 +194,25 @@ function StockChart({ history, indicators, days, setDays }) {
   );
 }
 
+const SCOPE_LABEL = {
+  individual: '個別テクニカル',
+  cross_sectional: 'クロスセクション',
+  sector: 'セクター',
+  market: '市場全体',
+};
+
+function getPrimaryDetail(pred) {
+  return pred?.details?.find(d => d.scope === 'individual') || pred?.details?.[0] || null;
+}
+
 /* ── Signal Panel ── */
 function SignalPanel({ prediction, indicators, lastClose }) {
   if (!prediction || !indicators) return null;
 
-  const { signal, confidence, reasons } = prediction;
+  const primary = getPrimaryDetail(prediction);
+  const signal = primary?.signal ?? 'neutral';
+  const confidence = primary?.confidence ?? 0;
+  const reasons = primary?.reasons ?? [];
   const pct   = Math.round(confidence * 100);
   const color  = SIGNAL_COLOR[signal];
 
@@ -320,6 +334,42 @@ function SignalPanel({ prediction, indicators, lastClose }) {
         </div>
       )}
 
+      {/* Prediction Models */}
+      {prediction.details && prediction.details.length > 0 && (
+        <div className="signal-section">
+          <div className="signal-section-title">予測モデル一覧</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 6 }}>
+            {prediction.details.map((d, i) => {
+              const dpct = Math.round(d.confidence * 100);
+              const dcolor = SIGNAL_COLOR[d.signal];
+              return (
+                <div key={i} style={{ background: '#161b22', borderRadius: 6, padding: '8px 10px', border: '1px solid #30363d' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                    <span style={{ fontSize: 10, color: '#58a6ff', background: '#1f3f6e44', border: '1px solid #58a6ff33', borderRadius: 4, padding: '1px 6px', flexShrink: 0 }}>
+                      {SCOPE_LABEL[d.scope] ?? d.scope}
+                    </span>
+                    <span style={{ fontSize: 11, color: '#e6edf3', fontWeight: 600, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.name}</span>
+                    <span style={{ fontSize: 10, color: dcolor, fontWeight: 700, flexShrink: 0 }}>{SIGNAL_LABEL[d.signal]}</span>
+                  </div>
+                  {d.confidence > 0 && (
+                    <div className="pred-confidence-row" style={{ marginBottom: 4 }}>
+                      <span style={{ fontSize: 10, color: '#6e7681', flexShrink: 0 }}>信頼度</span>
+                      <div className="pred-confidence-bar-bg">
+                        <div className={`pred-confidence-bar ${d.signal}`} style={{ width: `${dpct}%` }} />
+                      </div>
+                      <span className={`pred-confidence-value ${d.signal}`}>{dpct}%</span>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                    {d.reasons.map((r, j) => <span key={j} className="pred-reason-tag">{r}</span>)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
@@ -398,14 +448,17 @@ function App() {
         <div className="info-divider" />
         <span className={`info-price ${updown}`}>{fmtPrice(price)}</span>
         <span className={`info-change ${updown}`}>{fmtChange(change)}&nbsp;({fmtPct(changePct)})</span>
-        {prediction && (
-          <>
-            <div className="info-divider" />
-            <span className={`pred-signal ${prediction.signal}`} style={{ fontSize: 12, padding: '3px 10px' }}>
-              {SIGNAL_LABEL[prediction.signal]}
-            </span>
-          </>
-        )}
+        {prediction && (() => {
+          const sig = getPrimaryDetail(prediction)?.signal ?? 'neutral';
+          return (
+            <>
+              <div className="info-divider" />
+              <span className={`pred-signal ${sig}`} style={{ fontSize: 12, padding: '3px 10px' }}>
+                {SIGNAL_LABEL[sig]}
+              </span>
+            </>
+          );
+        })()}
       </div>
 
       <div className="stock-main">

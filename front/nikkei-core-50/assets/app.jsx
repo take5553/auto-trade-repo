@@ -17,11 +17,16 @@ function buildSectorStats(quotes) {
   return map;
 }
 
+function getPrimaryDetail(pred) {
+  return pred.details?.find(d => d.scope === 'individual') || pred.details?.[0] || null;
+}
+
 function buildSignalStats(predictions) {
   const map = {};
   for (const p of predictions) {
     if (!map[p.sector]) map[p.sector] = { buy: 0, sell: 0, neutral: 0 };
-    map[p.sector][p.signal]++;
+    const signal = getPrimaryDetail(p)?.signal ?? 'neutral';
+    map[p.sector][signal]++;
   }
   return map;
 }
@@ -70,7 +75,10 @@ function SectorSummary({ summary, quotes, predictions, sectors, sectorStats, sig
 
   const allSig = useMemo(() => {
     const sig = { buy: 0, sell: 0, neutral: 0 };
-    for (const p of predictions) sig[p.signal]++;
+    for (const p of predictions) {
+      const signal = getPrimaryDetail(p)?.signal ?? 'neutral';
+      sig[signal]++;
+    }
     return sig;
   }, [predictions]);
 
@@ -227,13 +235,15 @@ function App() {
   );
   const sortedPredictions = useMemo(() => {
     const order = { buy: 0, sell: 1, neutral: 2 };
-    return filteredPredictions.slice().sort(
-      (a, b) => (order[a.signal] - order[b.signal]) || b.confidence - a.confidence
-    );
+    return filteredPredictions.slice().sort((a, b) => {
+      const pa = getPrimaryDetail(a), pb = getPrimaryDetail(b);
+      return (order[pa?.signal ?? 'neutral'] - order[pb?.signal ?? 'neutral'])
+        || (pb?.confidence ?? 0) - (pa?.confidence ?? 0);
+    });
   }, [filteredPredictions]);
 
-  const buyCount  = filteredPredictions.filter(p => p.signal === 'buy').length;
-  const sellCount = filteredPredictions.filter(p => p.signal === 'sell').length;
+  const buyCount  = filteredPredictions.filter(p => getPrimaryDetail(p)?.signal === 'buy').length;
+  const sellCount = filteredPredictions.filter(p => getPrimaryDetail(p)?.signal === 'sell').length;
 
   if (loading) return (
     <div className="app" style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:'#94a3b8' }}>
