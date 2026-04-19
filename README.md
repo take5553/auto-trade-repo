@@ -13,11 +13,14 @@ auto-trade-repo/
 │   ├── main.py               # FastAPI エントリポイント
 │   ├── routers/              # HTTP 層（APIRouter ごとに 1 ファイル）
 │   ├── services/             # ビジネスロジック層（ABC + 実装）
+│   │   └── predictions/      # 予測ロジック（Strategyパターン、スコープ別）
 │   ├── schemas/              # Pydantic モデル（APIコントラクト）
 │   └── stock_data/           # yfinance でダウンロードした株価 CSV
 ├── front/                    # フロントエンド (HTML + React)
 │   ├── index.html            # トップページ
 │   ├── nikkei-core-50/       # 日経コア50ダッシュボード（タイル型グリッド）
+│   │   ├── index.html        # 銘柄一覧
+│   │   └── stock.html        # 銘柄詳細（チャート・予測）
 │   ├── card-sample/          # カードダッシュボード（横長カード縦並び）
 │   ├── card-list-sample/     # カードリストダッシュボード（情報密度改善版）
 │   └── chart-sample/         # チャートサンプル

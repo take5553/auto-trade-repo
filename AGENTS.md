@@ -10,11 +10,20 @@ auto-trade-repo/
 │   ├── main.py               # FastAPI エントリポイント（include_router を列挙）
 │   ├── routers/              # HTTP 層（APIRouter ごとに 1 ファイル）
 │   ├── services/             # ビジネスロジック層（ABC + 実装）
+│   │   └── predictions/      # 予測ロジック（Strategyパターン、スコープ別モジュール）
+│   │       ├── base.py       # 基底クラス
+│   │       ├── engine.py     # 予測エンジン（各Strategyを統括）
+│   │       ├── market.py     # マーケット全体レベルの予測
+│   │       ├── sector.py     # セクターレベルの予測（TOPIX-17粒度）
+│   │       ├── cross_sectional.py  # クロスセクショナル予測
+│   │       └── individual.py # 個別銘柄レベルの予測
 │   ├── schemas/              # Pydantic モデル（APIコントラクト）
 │   └── stock_data/           # yfinance でダウンロードした株価 CSV（git 管理外）
 ├── front/                    # 静的フロントエンド (HTML + React CDN)
 │   ├── index.html
 │   ├── nikkei-core-50/       # 日経コア50ダッシュボード（タイル型グリッド）
+│   │   ├── index.html        # 銘柄一覧ダッシュボード
+│   │   └── stock.html        # 銘柄詳細ページ（チャート・予測）
 │   ├── card-sample/          # カードダッシュボード（横長カード縦並び）
 │   ├── card-list-sample/     # カードリストダッシュボード（情報密度改善版）
 │   └── chart-sample/         # チャートサンプル
@@ -61,6 +70,7 @@ docker compose up -d
 | ファイル | 役割 |
 |---------|------|
 | `api/services/<page>_store.py` | 銘柄リストや静的マスターデータの管理。 |
+| `api/services/predictions/` | 予測ロジックをStrategyパターンで実装するサブパッケージ。スコープ（market / sector / cross_sectional / individual）ごとにモジュールを分割し `engine.py` が統括する。 |
 | `api/stock_data/<page>/` | yfinance 等でダウンロードした CSV。git 管理外（`.gitignore` で除外）。 |
 
 命名規則：
