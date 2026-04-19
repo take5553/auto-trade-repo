@@ -45,7 +45,7 @@ body { overflow: hidden; }
 /* ── Main 2-column Layout ── */
 .stock-main {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 296px;
+  grid-template-columns: minmax(0, 1fr) 12px 296px;
   overflow: hidden;
 }
 
@@ -54,7 +54,6 @@ body { overflow: hidden; }
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-right: 1px solid #30363d;
 }
 
 .chart-toolbar {
@@ -121,6 +120,43 @@ body { overflow: hidden; }
 
 .vol-chart-area  { width: 100%; height: 81px; }
 .rsi-chart-area  { width: 100%; height: 118px; }
+
+/* ── Resize Handle ── */
+.resize-handle {
+  width: 12px;
+  cursor: col-resize;
+  background: #161b22;
+  border-left: 1px solid #30363d;
+  border-right: 1px solid #30363d;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: background 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resize-handle::after {
+  content: '⋮';
+  font-size: 14px;
+  color: #484f58;
+  line-height: 1;
+  user-select: none;
+  transition: color 0.15s;
+  letter-spacing: -2px;
+}
+
+.resize-handle:hover,
+.resize-handle:active {
+  background: #1c2333;
+  border-color: #58a6ff;
+}
+
+.resize-handle:hover::after,
+.resize-handle:active::after {
+  color: #58a6ff;
+}
 
 /* ── Signal Column ── */
 .signal-column {
@@ -318,9 +354,11 @@ body { overflow: hidden; }
   }
 
   .stock-main {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     overflow: visible;
   }
+
+  .resize-handle { display: none; }
 
   .chart-column {
     height: 640px;

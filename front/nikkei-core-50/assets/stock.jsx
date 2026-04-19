@@ -383,7 +383,24 @@ function App() {
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState(null);
   const [days,       setDays]       = useState(365);
-  const [now, setNow] = useState(new Date());
+  const [now,        setNow]        = useState(new Date());
+  const [signalWidth, setSignalWidth] = useState(296);
+
+  const handleResizeMouseDown = React.useCallback((e) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startWidth = signalWidth;
+    const onMove = (mv) => {
+      const delta = startX - mv.clientX;
+      setSignalWidth(Math.max(220, Math.min(520, startWidth + delta)));
+    };
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  }, [signalWidth]);
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -461,8 +478,24 @@ function App() {
         })()}
       </div>
 
-      <div className="stock-main">
+      <div className="stock-main" style={{ gridTemplateColumns: `minmax(0, 1fr) 16px ${signalWidth}px` }}>
         <StockChart history={history} indicators={indicators} days={days} setDays={setDays} />
+        <div
+          onMouseDown={handleResizeMouseDown}
+          style={{
+            width: '16px', cursor: 'col-resize', flexShrink: 0,
+            background: '#1c2333',
+            borderLeft: '1px solid #30363d', borderRight: '1px solid #30363d',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            userSelect: 'none',
+          }}
+        >
+          <svg width="6" height="40" viewBox="0 0 6 40" style={{ pointerEvents: 'none', opacity: 0.6 }}>
+            {[6, 12, 18, 24, 30, 34].map(y => (
+              <circle key={y} cx="3" cy={y} r="1.5" fill="#8b949e" />
+            ))}
+          </svg>
+        </div>
         <SignalPanel prediction={prediction} indicators={indicators} lastClose={price} />
       </div>
     </div>
