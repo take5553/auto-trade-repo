@@ -13,6 +13,7 @@ auto-trade-repo/
 │   ├── main.py               # FastAPI エントリポイント
 │   ├── routers/              # HTTP 層（APIRouter ごとに 1 ファイル）
 │   ├── services/             # ビジネスロジック層（ABC + 実装）
+│   │   ├── sector_etf_store.py   # TOPIX-17セクターETFデータ管理
 │   │   └── predictions/      # 予測ロジック（Strategyパターン、スコープ別）
 │   ├── schemas/              # Pydantic モデル（APIコントラクト）
 │   └── stock_data/           # yfinance でダウンロードした株価 CSV
@@ -68,9 +69,19 @@ docker compose up -d
 | GET | `/api/nikkei-core-50/summary` | 日経コア50：マーケットサマリー |
 | GET | `/api/nikkei-core-50/predictions` | 日経コア50：全銘柄の予測一覧 |
 | GET | `/api/nikkei-core-50/stocks/{symbol}/history` | 日経コア50：銘柄の価格履歴 |
-| GET | `/api/nikkei-core-50/stocks/{symbol}/prediction` | 日経コア50：銘柄の予測 |
+| GET | `/api/nikkei-core-50/stocks/{symbol}/indicators` | 日経コア50：銘柄のテクニカル指標（MA・RSI・52週高安値） |
+| GET | `/api/nikkei-core-50/stocks/{symbol}/prediction` | 日経コア50：銘柄の予測（individual / sector / cross_sectional / market） |
 
 詳細なレスポンススキーマは `http://localhost:8080/docs` を参照。
+
+## 銘柄詳細ページ（stock.html）の主な機能
+
+| 機能 | 概要 |
+|------|------|
+| ローソク足チャート | MA5・MA25 オーバーレイ、出来高・RSI(14) サブチャート。期間切替（1ヶ月〜5年） |
+| 売買シグナル | 予測モデル一覧を表示。スコープ（個別テクニカル / セクター相対強度 / クロスセクション / 市場全体）ごとにシグナル・信頼度・根拠タグを表示 |
+| セクター相対強度 | 銘柄終値 ÷ TOPIX-17セクターETF終値のレシオチャートを分析。MA クロス・モメンタム・Zスコアから売買シグナルを生成 |
+| ドラッグリサイズ | チャートと指標パネルの境界をドラッグして幅を調整可能。デフォルト比率は 68:32、最大 70% まで拡張可能 |
 
 ## 開発方針
 
