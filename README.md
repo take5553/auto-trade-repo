@@ -13,11 +13,14 @@ auto-trade-repo/
 │   ├── main.py               # FastAPI エントリポイント
 │   ├── routers/              # HTTP 層（APIRouter ごとに 1 ファイル）
 │   ├── services/             # ビジネスロジック層（ABC + 実装）
-│   └── schemas/              # Pydantic モデル（APIコントラクト）
+│   ├── schemas/              # Pydantic モデル（APIコントラクト）
+│   └── stock_data/           # yfinance でダウンロードした株価 CSV
 ├── front/                    # フロントエンド (HTML + React)
 │   ├── index.html            # トップページ
+│   ├── nikkei-core-50/       # 日経コア50ダッシュボード（タイル型グリッド）
 │   ├── card-sample/          # カードダッシュボード（横長カード縦並び）
-│   └── card-list-sample/     # カードリストダッシュボード（情報密度改善版）
+│   ├── card-list-sample/     # カードリストダッシュボード（情報密度改善版）
+│   └── chart-sample/         # チャートサンプル
 └── infra/
     └── docker/
         ├── nginx/    # Nginx 設定・Dockerfile
@@ -37,6 +40,7 @@ docker compose up -d
 | URL | 説明 |
 |-----|------|
 | `http://localhost/` | フロントエンド（HTML） |
+| `http://localhost/nikkei-core-50/` | 日経コア50ダッシュボード |
 | `http://localhost/card-sample/` | カードダッシュボード（サンプル） |
 | `http://localhost/card-list-sample/` | カードリストダッシュボード（サンプル） |
 | `http://localhost/api/*` | FastAPI バックエンド |
@@ -57,6 +61,11 @@ docker compose up -d
 | GET | `/api/card-list/positions` | カードリスト用：保有ポジション一覧 |
 | GET | `/api/card-list/alerts` | カードリスト用：アラート一覧 |
 | GET | `/api/card-list/summary` | カードリスト用：ダッシュボードのサマリ |
+| GET | `/api/nikkei-core-50/quotes` | 日経コア50：全銘柄の現在値一覧 |
+| GET | `/api/nikkei-core-50/summary` | 日経コア50：マーケットサマリー |
+| GET | `/api/nikkei-core-50/predictions` | 日経コア50：全銘柄の予測一覧 |
+| GET | `/api/nikkei-core-50/stocks/{symbol}/history` | 日経コア50：銘柄の価格履歴 |
+| GET | `/api/nikkei-core-50/stocks/{symbol}/prediction` | 日経コア50：銘柄の予測 |
 
 詳細なレスポンススキーマは `http://localhost:8080/docs` を参照。
 
@@ -67,6 +76,6 @@ docker compose up -d
 
 ## 技術スタック
 
-- **バックエンド**: Python 3.14 / FastAPI / Uvicorn / Pydantic
+- **バックエンド**: Python 3.14 / FastAPI / Uvicorn / Pydantic / yfinance
 - **フロントエンド**: React 18 (CDN) / Babel Standalone / CSS
 - **インフラ**: Docker Compose / Nginx

@@ -10,11 +10,14 @@ auto-trade-repo/
 │   ├── main.py               # FastAPI エントリポイント（include_router を列挙）
 │   ├── routers/              # HTTP 層（APIRouter ごとに 1 ファイル）
 │   ├── services/             # ビジネスロジック層（ABC + 実装）
-│   └── schemas/              # Pydantic モデル（APIコントラクト）
+│   ├── schemas/              # Pydantic モデル（APIコントラクト）
+│   └── stock_data/           # yfinance でダウンロードした株価 CSV（git 管理外）
 ├── front/                    # 静的フロントエンド (HTML + React CDN)
 │   ├── index.html
+│   ├── nikkei-core-50/       # 日経コア50ダッシュボード（タイル型グリッド）
 │   ├── card-sample/          # カードダッシュボード（横長カード縦並び）
-│   └── card-list-sample/     # カードリストダッシュボード（情報密度改善版）
+│   ├── card-list-sample/     # カードリストダッシュボード（情報密度改善版）
+│   └── chart-sample/         # チャートサンプル
 └── infra/
     └── docker/
         ├── nginx/    # Nginx 設定・Dockerfile
@@ -32,7 +35,7 @@ docker compose up -d
 
 ## 技術スタック
 
-- Python 3.14 / FastAPI / Uvicorn / Pydantic
+- Python 3.14 / FastAPI / Uvicorn / Pydantic / yfinance
 - React 18 (CDN) / Babel Standalone
 - Docker Compose / Nginx
 
@@ -43,14 +46,22 @@ docker compose up -d
 
 ## バックエンドのコード構成ルール
 
-新しいページ（機能）を追加するときは、下記の 3 ファイルをセットで追加する。
+新しいページ（機能）を追加するときは、下記のファイルをセットで追加する。
 
 | ファイル | 役割 |
 |---------|------|
 | `api/schemas/<page>.py` | Pydantic モデル（リクエスト／レスポンスの型）。1ページに複数モデルがあってもこの1ファイルに集約。 |
 | `api/services/<page>.py` | ビジネスロジックの ABC。戻り値の型は `schemas/` を参照。 |
 | `api/services/<page>_mock.py` | モック実装。`_mock` サフィックスで固定。 |
+| `api/services/<page>_<datasource>.py` | 実データ実装。データソース名をサフィックスに付ける（例：`_yfinance`）。 |
 | `api/routers/<page>.py` | `APIRouter(prefix="/api/<page-kebab>")`。薄く保ち、service を呼ぶだけ。各エンドポイントに `response_model=...` を付ける。 |
+
+補助ファイル（必要に応じて追加）：
+
+| ファイル | 役割 |
+|---------|------|
+| `api/services/<page>_store.py` | 銘柄リストや静的マスターデータの管理。 |
+| `api/stock_data/<page>/` | yfinance 等でダウンロードした CSV。git 管理外（`.gitignore` で除外）。 |
 
 命名規則：
 - URL は kebab-case（例：`/api/nikkei-core-50`）
