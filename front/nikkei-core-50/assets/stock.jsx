@@ -251,7 +251,7 @@ function SignalPanel({ prediction, indicators, lastClose }) {
           <span className={`pred-confidence-value ${signal}`}>{pct}%</span>
         </div>
         <div className="pred-reasons" style={{ marginTop: 10 }}>
-          {reasons.map((r, i) => <span key={i} className="pred-reason-tag">{r}</span>)}
+          {reasons.map((r, i) => <span key={i} className="pred-reason-tag" style={{ whiteSpace: 'normal', overflowWrap: 'anywhere' }}>{r}</span>)}
         </div>
       </div>
 
@@ -361,7 +361,7 @@ function SignalPanel({ prediction, indicators, lastClose }) {
                     </div>
                   )}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                    {d.reasons.map((r, j) => <span key={j} className="pred-reason-tag">{r}</span>)}
+                    {d.reasons.map((r, j) => <span key={j} className="pred-reason-tag" style={{ whiteSpace: 'normal', overflowWrap: 'anywhere' }}>{r}</span>)}
                   </div>
                 </div>
               );
@@ -384,7 +384,7 @@ function App() {
   const [error,      setError]      = useState(null);
   const [days,       setDays]       = useState(365);
   const [now,        setNow]        = useState(new Date());
-  const [signalWidth, setSignalWidth] = useState(296);
+  const [signalWidth, setSignalWidth] = useState(() => Math.round((window.innerWidth - 16) * 0.32));
 
   const handleResizeMouseDown = React.useCallback((e) => {
     e.preventDefault();
@@ -392,7 +392,7 @@ function App() {
     const startWidth = signalWidth;
     const onMove = (mv) => {
       const delta = startX - mv.clientX;
-      setSignalWidth(Math.max(220, Math.min(520, startWidth + delta)));
+      setSignalWidth(Math.max(220, Math.min(Math.floor(window.innerWidth * 0.7), startWidth + delta)));
     };
     const onUp = () => {
       document.removeEventListener('mousemove', onMove);

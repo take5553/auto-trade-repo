@@ -497,7 +497,8 @@ body {
   border: 1px solid #30363d;
   border-radius: 3px;
   padding: 1px 6px;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* ── Responsive ── */
