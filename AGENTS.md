@@ -31,3 +31,9 @@ docker compose up -d
 - Python 3.14 / FastAPI / Uvicorn
 - React 18 (CDN) / Babel Standalone
 - Docker Compose / Nginx
+
+## 作業ルール
+
+- 作業開始時は必ずブランチを切ること
+- 一つの作業が完了したらコミットすること
+- コミットの実行前には必ずユーザーに許可を求めること
